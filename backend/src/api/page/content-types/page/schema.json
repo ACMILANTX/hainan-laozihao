@@ -29,6 +29,35 @@
     },
     "seoDescription": {
       "type": "text"
+    },
+    "themePrimary": {
+      "type": "string"
+    },
+    "themeBg": {
+      "type": "string"
+    },
+    "heroTitle": {
+      "type": "string"
+    },
+    "heroSubtitle": {
+      "type": "text"
+    },
+    "heroImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "siteLogo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "footerText": {
+      "type": "text"
     }
   }
 }

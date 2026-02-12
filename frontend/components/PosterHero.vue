@@ -2,11 +2,13 @@
 defineProps<{
   title: string
   subtitle: string
+  imageUrl?: string
 }>()
 </script>
 
 <template>
   <section class="relative overflow-hidden rounded-2xl border border-red-300/40 bg-gradient-to-br from-red-800 via-red-700 to-red-900 p-6 text-red-50 shadow-2xl md:p-10">
+    <img v-if="imageUrl" :src="imageUrl" alt="协会海报" class="absolute inset-0 h-full w-full object-cover opacity-30" />
     <div class="absolute inset-0 opacity-25" style="background-image: repeating-linear-gradient(135deg, #fca5a5 0, #fca5a5 2px, transparent 2px, transparent 14px);"></div>
     <div class="absolute -right-12 -top-12 h-48 w-48 rounded-full border-8 border-yellow-200/40"></div>
     <div class="absolute -bottom-16 -left-10 h-56 w-56 rounded-full border-8 border-yellow-200/30"></div>
