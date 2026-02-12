@@ -1,0 +1,9 @@
+node_modules
+.nuxt
+.output
+.env
+.DS_Store
+backend/.cache
+backend/build
+backend/node_modules
+frontend/node_modules

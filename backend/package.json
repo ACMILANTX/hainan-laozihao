@@ -1,0 +1,21 @@
+{
+  "name": "association-strapi-backend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "develop": "strapi develop",
+    "start": "strapi start",
+    "build": "strapi build"
+  },
+  "dependencies": {
+    "@strapi/strapi": "4.25.14",
+    "pg": "^8.13.1"
+  },
+  "engines": {
+    "node": ">=18 <=20.x.x",
+    "npm": ">=6.0.0"
+  },
+  "strapi": {
+    "uuid": "association-strapi-app"
+  }
+}
