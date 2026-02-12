@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+  <rect width="800" height="400" fill="#7f1d1d"/>
+  <rect x="60" y="80" width="680" height="240" rx="20" fill="#991b1b" stroke="#fbbf24" stroke-width="4"/>
+  <text x="100" y="190" fill="#fef3c7" font-size="44" font-family="sans-serif" font-weight="700">协会新闻</text>
+  <text x="100" y="245" fill="#fecaca" font-size="24" font-family="sans-serif">Association News</text>
+</svg>

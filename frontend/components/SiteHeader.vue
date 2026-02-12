@@ -1,8 +1,13 @@
+<script setup lang="ts">
+const site = await useSiteSettings()
+const logoUrl = useImageSource(site.value.siteLogo, '/images/site-logo.svg')
+</script>
+
 <template>
   <header class="sticky top-0 z-50 border-b border-red-200/70 bg-gradient-to-r from-red-950 via-red-900 to-red-800 text-red-50 shadow-lg backdrop-blur">
     <nav class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 md:px-6">
       <NuxtLink to="/" class="flex items-center gap-3">
-        <span class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-yellow-300/50 bg-red-700 text-lg font-bold text-yellow-200">协</span>
+        <img :src="logoUrl" alt="协会 Logo" class="h-10 w-10 rounded-full border border-yellow-300/50 bg-white/95 object-cover" />
         <div>
           <p class="text-lg font-extrabold tracking-wide">协会官网</p>
           <p class="text-xs text-red-100/80">红色国潮 · 凝心聚力</p>

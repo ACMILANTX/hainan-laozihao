@@ -11,5 +11,18 @@ export const useApi = () => {
     return await $fetch<StrapiSingleResponse<T>>(`${config.public.apiBase}${endpoint}`, { params })
   }
 
-  return { getList, getSingle }
+  const resolveStrapiUrl = (url?: string | null) => {
+    if (!url) {
+      return ''
+    }
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return url
+    }
+
+    const apiBase = String(config.public.apiBase || '/api')
+    const origin = apiBase.endsWith('/api') ? apiBase.slice(0, -4) : apiBase
+    return `${origin}${url}`
+  }
+
+  return { getList, getSingle, resolveStrapiUrl }
 }

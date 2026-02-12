@@ -9,7 +9,8 @@ useSeoMeta({
 const { getList } = useApi()
 const { data } = await useAsyncData('news-list', async () => {
   const res = await getList<News>('/news', {
-    'sort[0]': 'publishedAt:desc'
+    'sort[0]': 'pinned:desc',
+    'sort[1]': 'publishedAt:desc'
   })
   return res.data
 })

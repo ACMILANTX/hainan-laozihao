@@ -30,6 +30,22 @@
     },
     "avatarUrl": {
       "type": "string"
+    },
+    "brandStory": {
+      "type": "text"
+    },
+    "city": {
+      "type": "string"
+    },
+    "tag": {
+      "type": "string"
+    },
+    "tagColor": {
+      "type": "string"
+    },
+    "wallOrder": {
+      "type": "integer",
+      "default": 0
     }
   }
 }

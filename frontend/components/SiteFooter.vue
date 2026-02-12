@@ -1,3 +1,7 @@
+<script setup lang="ts">
+const site = await useSiteSettings()
+</script>
+
 <template>
   <footer class="relative mt-16 overflow-hidden border-t border-red-300/40 bg-gradient-to-b from-red-900 to-red-950 text-red-50">
     <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_10%_20%,rgba(255,221,0,0.18),transparent_35%),radial-gradient(circle_at_80%_80%,rgba(255,120,80,0.14),transparent_40%)]" />
@@ -24,7 +28,7 @@
       </section>
     </div>
     <div class="relative border-t border-red-400/20 px-4 py-4 text-center text-xs text-red-100/80">
-      © {{ new Date().getFullYear() }} 协会官网 · 国潮主题展示
+      {{ site.footerText }}
     </div>
   </footer>
 </template>

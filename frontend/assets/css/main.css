@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --theme-primary: #9f1239;
+  --theme-bg: #fff1f2;
+}
+
 body {
-  @apply bg-red-50 text-slate-800 antialiased;
+  @apply text-slate-800 antialiased;
+  background-color: var(--theme-bg);
 }

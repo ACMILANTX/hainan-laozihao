@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 500">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#7f1d1d"/>
+      <stop offset="1" stop-color="#991b1b"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="500" fill="url(#g)"/>
+  <circle cx="180" cy="120" r="110" fill="#fbbf24" opacity=".2"/>
+  <circle cx="1060" cy="420" r="140" fill="#fca5a5" opacity=".2"/>
+  <text x="90" y="230" fill="#fef3c7" font-size="64" font-family="sans-serif" font-weight="700">红色国潮协会海报</text>
+</svg>

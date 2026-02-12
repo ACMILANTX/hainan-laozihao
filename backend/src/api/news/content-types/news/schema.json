@@ -24,6 +24,9 @@
     "summary": {
       "type": "text"
     },
+    "excerpt": {
+      "type": "text"
+    },
     "content": {
       "type": "richtext"
     },
@@ -32,6 +35,10 @@
     },
     "publishedAt": {
       "type": "datetime"
+    },
+    "pinned": {
+      "type": "boolean",
+      "default": false
     }
   }
 }
