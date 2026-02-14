@@ -41,6 +41,8 @@ services:
     environment:
       TZ: Asia/Shanghai
       NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 3000
       # 前端访问 Strapi 的 base（你前端如果用运行时 env）
       NUXT_PUBLIC_API_BASE: https://lzhapi.jcts.xyz
     networks:
