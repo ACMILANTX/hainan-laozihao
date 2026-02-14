@@ -2,7 +2,7 @@
   "kind": "collectionType",
   "collectionName": "news",
   "info": {
-    "singularName": "news",
+    "singularName": "news-item",
     "pluralName": "news",
     "displayName": "News",
     "description": "新闻资讯"
