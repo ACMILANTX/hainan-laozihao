@@ -2,7 +2,7 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # 仅优化 npm 源（国内电信更稳）
-RUN npm config set registry https://registry.npmmirror.com
+RUN npm config set registry https://mirrors.cloud.tencent.com/npm/
 
 COPY package*.json ./
 RUN npm install
