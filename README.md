@@ -72,13 +72,31 @@ docker compose up -d --build
 创建完成后：
 
 1. 在 Content Manager 中添加 Member / News / Page 数据。
-2. 在 Settings -> Roles -> Public 中开放对应集合的 `find` / `findOne` 权限（供前端公开访问）。
+2. 在 Settings -> Users & Permissions Plugin -> Roles -> Public 中开放对应集合的 `find` / `findOne` 权限（供前端公开访问）。
 3. Page 建议至少维护三个 slug：
    - `site`（站点主题与海报配置）
    - `about`
    - `contact`
 
 > 系统启动时会自动尝试创建 `about`、`contact`、`site` 三条默认页面内容（若不存在，幂等）。
+
+
+## Users & Permissions 插件与 Public 只读权限
+
+### 为什么后台可能看不到 Public / Authenticated
+
+若 `backend/package.json` 缺少 `@strapi/plugin-users-permissions` 依赖，后台左侧不会出现 **Users & Permissions Plugin**，也就无法看到 `Public / Authenticated` 角色。
+
+### 手工配置（后台操作）
+
+1. 进入 `Settings -> Users & Permissions Plugin -> Roles -> Public`。
+2. 分别勾选以下内容类型的只读权限：
+   - `member`: `find`, `findOne`
+   - `news`: `find`, `findOne`
+   - `page`: `find`, `findOne`
+3. 点击 Save。
+
+> 项目已在 `backend/src/index.js` 的 bootstrap 中增加幂等初始化：启动时会自动确保 Public 角色具备上述只读权限，不会放开 create/update/delete。
 
 ## Strapi 字段说明（新增）
 
@@ -119,6 +137,23 @@ docker compose up -d --build
 
 > 图片加载策略：优先使用 Strapi 配置图片；若未配置则自动回退到 `frontend/public/images` 默认图片。
 
+
+## 后台语言切换（Admin i18n）
+
+项目已在 `backend/config/admin.js` 启用 Admin 可选语言：`en` 与 `zh-Hans`。
+
+### 切换步骤
+
+1. 登录 Strapi 后台（`/admin`）。
+2. 点击右上角用户菜单，进入 `Profile`。
+3. 在语言（Interface language）中选择 `中文（简体）/ zh-Hans`，保存后界面即时切换。
+
+### 若看不到中文选项
+
+- 检查 `backend/config/admin.js` 是否包含：`locales: ['en', 'zh-Hans']`。
+- 修改配置后需要重新构建后台：`cd backend && npm run build`。
+- 若使用容器部署，请重建并重启容器（例如 `docker compose up -d --build`）以加载新的 Admin 构建产物。
+
 ## 开发说明（可选）
 
 如需本地分别开发，可进入子项目：
@@ -141,3 +176,19 @@ npm run develop
 - 替换 `docker-compose.yml` 中默认密钥与数据库密码。
 - 为 Nginx 配置 HTTPS（如接入 Let's Encrypt）。
 - 根据业务为 Strapi 增加上传对象存储与备份策略。
+
+
+## 公共官网上线 checklist
+
+- [ ] `docker compose up -d --build` 可正常启动前后端与数据库。
+- [ ] 首次登录 `http://localhost/admin` 已创建管理员账号。
+- [ ] 后台左侧已出现 **Users & Permissions Plugin**，并可见 `Public / Authenticated` 角色。
+- [ ] Public 角色已开启只读权限：`member/news/page` 的 `find` 与 `findOne`。
+- [ ] 匿名访问验证通过：
+  - [ ] `GET /api/members`、`GET /api/members/:id`
+  - [ ] `GET /api/news`、`GET /api/news/:id`
+  - [ ] `GET /api/pages`、`GET /api/pages/:id`
+- [ ] 写接口仍受保护（例如 `POST /api/members` 返回 `401/403`）。
+- [ ] `slug=site` 的 Page 已配置主题色、首页文案、页脚文案并发布。
+- [ ] Nginx / 域名 / HTTPS（如有）已按生产要求配置。
+

@@ -8,6 +8,7 @@
     "build": "strapi build"
   },
   "dependencies": {
+    "@strapi/plugin-users-permissions": "^4.25.14",
     "@strapi/strapi": "4.25.14",
     "pg": "^8.13.1",
     "react": "^18.3.1",

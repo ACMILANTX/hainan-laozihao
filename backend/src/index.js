@@ -1,3 +1,59 @@
+const PUBLIC_READ_ACTIONS = [
+  'api::member.member.find',
+  'api::member.member.findOne',
+  'api::news.news.find',
+  'api::news.news.findOne',
+  'api::page.page.find',
+  'api::page.page.findOne'
+]
+
+async function ensurePublicReadPermissions(strapi) {
+  if (!strapi.plugin('users-permissions')) {
+    strapi.log.warn('[bootstrap] users-permissions 插件不可用，跳过 Public 权限初始化。')
+    return
+  }
+
+  const publicRole = await strapi
+    .query('plugin::users-permissions.role')
+    .findOne({ where: { type: 'public' } })
+
+  if (!publicRole) {
+    strapi.log.warn('[bootstrap] 未找到 Public 角色，跳过 Public 权限初始化。')
+    return
+  }
+
+  for (const action of PUBLIC_READ_ACTIONS) {
+    const existingPermission = await strapi
+      .query('plugin::users-permissions.permission')
+      .findOne({
+        where: {
+          action,
+          role: publicRole.id
+        }
+      })
+
+    if (!existingPermission) {
+      await strapi.query('plugin::users-permissions.permission').create({
+        data: {
+          action,
+          role: publicRole.id,
+          enabled: true
+        }
+      })
+      continue
+    }
+
+    if (!existingPermission.enabled) {
+      await strapi.query('plugin::users-permissions.permission').update({
+        where: { id: existingPermission.id },
+        data: { enabled: true }
+      })
+    }
+  }
+
+  strapi.log.info('[bootstrap] Public 角色已确保开放 members/news/page 的 find 与 findOne。')
+}
+
 module.exports = {
   async bootstrap({ strapi }) {
     const pages = [
@@ -19,7 +75,8 @@ module.exports = {
         title: '站点配置',
         slug: 'site',
         heroTitle: '凝聚会员力量 · 共绘协会新篇',
-        heroSubtitle: '以红色国潮视觉传递文化底蕴，打造兼具现代感与组织感的协会门户。这里汇聚会员风采、新闻动态与协会服务，展示专业、开放、协作的形象。',
+        heroSubtitle:
+          '以红色国潮视觉传递文化底蕴，打造兼具现代感与组织感的协会门户。这里汇聚会员风采、新闻动态与协会服务，展示专业、开放、协作的形象。',
         themePrimary: '#9f1239',
         themeBg: '#fff1f2',
         footerText: '© 协会官网 · 红色国潮主题'
@@ -38,5 +95,7 @@ module.exports = {
         })
       }
     }
+
+    await ensurePublicReadPermissions(strapi)
   }
 }
