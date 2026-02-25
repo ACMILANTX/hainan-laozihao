@@ -10,5 +10,7 @@ module.exports = ({ env }) => ({
       salt: env('TRANSFER_TOKEN_SALT')
     }
   },
-  locales: ['en', 'zh-Hans']
+  config: {
+    locales: ['zh-Hans', 'en']
+  }
 })

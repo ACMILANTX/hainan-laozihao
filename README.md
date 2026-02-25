@@ -140,7 +140,8 @@ docker compose up -d --build
 
 ## 后台语言切换（Admin i18n）
 
-项目已在 `backend/config/admin.js` 启用 Admin 可选语言：`en` 与 `zh-Hans`。
+项目已在 `backend/config/admin.js` 的 `config.locales` 启用 Admin 可选语言：`zh-Hans` 与 `en`。
+并在 `backend/src/admin/app.js` 增加了首次访问默认语言策略：当浏览器本地未保存语言偏好时，自动使用 `zh-Hans`；若用户已手动设置过语言，则不会覆盖。
 
 ### 切换步骤
 
@@ -150,9 +151,9 @@ docker compose up -d --build
 
 ### 若看不到中文选项
 
-- 检查 `backend/config/admin.js` 是否包含：`locales: ['en', 'zh-Hans']`。
-- 修改配置后需要重新构建后台：`cd backend && npm run build`。
-- 若使用容器部署，请重建并重启容器（例如 `docker compose up -d --build`）以加载新的 Admin 构建产物。
+- 检查 `backend/config/admin.js` 是否包含：`config: { locales: ['zh-Hans', 'en'] }`。
+- 修改后台 Admin 配置后，必须重新构建 Admin：`cd backend && npm run build`。
+- 若使用容器部署，请重建并重启镜像/容器（例如 `docker compose up -d --build`）以加载新的 Admin 构建产物。
 
 ## 开发说明（可选）
 
@@ -191,4 +192,3 @@ npm run develop
 - [ ] 写接口仍受保护（例如 `POST /api/members` 返回 `401/403`）。
 - [ ] `slug=site` 的 Page 已配置主题色、首页文案、页脚文案并发布。
 - [ ] Nginx / 域名 / HTTPS（如有）已按生产要求配置。
-
