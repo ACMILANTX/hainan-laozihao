@@ -7,7 +7,11 @@ const { getList } = useApi()
 
 const { data } = await useAsyncData(`news-${slug}`, async () => {
   const res = await getList<News>('/news', {
-    'filters[slug][$eq]': slug
+    'filters[slug][$eq]': slug,
+    'publicationState': 'live',
+    'populate': '*',
+    'pagination[page]': 1,
+    'pagination[pageSize]': 1
   })
   return res.data[0]
 })
