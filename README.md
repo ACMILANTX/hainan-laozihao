@@ -192,3 +192,112 @@ npm run develop
 - [ ] 写接口仍受保护（例如 `POST /api/members` 返回 `401/403`）。
 - [ ] `slug=site` 的 Page 已配置主题色、首页文案、页脚文案并发布。
 - [ ] Nginx / 域名 / HTTPS（如有）已按生产要求配置。
+
+
+## 任务修复记录：fix-members-wall-and-news-display
+
+### 修复前问题证据（复现口径）
+
+> 以下为本次问题复现与排查口径，命令可在服务启动后直接执行：
+
+1. 会员墙默认只显示 25 条（Strapi v4 默认分页 `pageSize=25`）。
+
+```bash
+curl -s "http://localhost/api/members?sort[0]=wallOrder:asc&sort[1]=createdAt:desc" | jq '.meta.pagination, .data | length'
+```
+
+预期复现现象：
+- `meta.pagination.total = 57`
+- `data | length = 25`
+
+2. 新闻前端不展示（Public 权限 action UID 配错为 `api::news.news.*`，实际应为 `api::news.news-item.*`）。
+
+```bash
+curl -i "http://localhost/api/news?sort[0]=publishedAt:desc"
+```
+
+预期复现现象：
+- 可能返回 `401`（权限未命中）或前端空列表。
+
+### 定位结果
+
+- 会员墙页面与请求源：`frontend/pages/members/index.vue` + `frontend/composables/useApi.ts`。
+- 新闻列表/详情请求源：`frontend/pages/news/index.vue`、`frontend/pages/news/[slug].vue` + `frontend/composables/useApi.ts`。
+- 新闻真实内容类型 UID：`api::news.news-item`（来源：`backend/src/api/news/content-types/news-item/schema.json` 的 `singularName: news-item` 与控制器 `createCoreController('api::news.news-item')`）。
+- 新闻 REST 路由路径仍是 `/api/news`（来源：`backend/src/api/news/routes/news.js`）。
+
+### 修复点
+
+#### A）会员墙分页修复
+
+- 在会员墙请求中显式加入 Strapi v4 分页参数：
+  - `pagination[page]`
+  - `pagination[pageSize]`
+- 同时补齐：
+  - `publicationState=live`
+  - 排序 `sort[0]=wallOrder:asc&sort[1]=createdAt:desc`
+- 解析并使用 `resp.meta.pagination`（`total/page/pageCount/pageSize`）。
+- 前端实现页码分页 UI（上一页 / 数字页码 / 下一页），并加 `isLoading` 防重复请求。
+
+#### B）新闻不展示修复
+
+- 在 Strapi `bootstrap` 中做 Public 权限幂等自愈：
+  - 从错误 UID：`api::news.news.find` / `findOne`
+  - 改为真实 UID：`api::news.news-item.find` / `findOne`
+- 保留 members/page 的只读权限初始化；启动日志输出最终权限清单，便于核查。
+- Nuxt 新闻请求参数对齐 Strapi v4：
+  - 列表：`populate=*`、`publicationState=live`、`sort`、`pagination`
+  - 详情：`filters[slug][$eq]` + `populate=*` + `publicationState=live` + `pagination`
+
+#### C）API helper 轻量增强（局部）
+
+- `useApi` 支持 `string | number` 参数并统一转换为字符串，避免分页参数在各页面重复处理。
+
+### 修复后验证命令
+
+1. 会员分页（第一页）
+
+```bash
+curl -s "http://localhost/api/members?sort[0]=wallOrder:asc&sort[1]=createdAt:desc&publicationState=live&pagination[page]=1&pagination[pageSize]=25" | jq '.meta.pagination, .data | length'
+```
+
+验收点：
+- `data | length = 25`
+- `meta.pagination.page = 1`
+- `meta.pagination.total = 57`（以后台真实数据为准）
+
+2. 会员分页（第二页）
+
+```bash
+curl -s "http://localhost/api/members?sort[0]=wallOrder:asc&sort[1]=createdAt:desc&publicationState=live&pagination[page]=2&pagination[pageSize]=25" | jq '.meta.pagination, .data | length'
+```
+
+验收点：
+- `meta.pagination.page = 2`
+- `data | length > 0`
+- 与第一页非重复分页片段
+
+3. 新闻列表（Public 可读）
+
+```bash
+curl -s "http://localhost/api/news?publicationState=live&sort[0]=pinned:desc&sort[1]=publishedAt:desc&pagination[page]=1&pagination[pageSize]=12&populate=*" | jq '.meta.pagination, .data | length'
+```
+
+验收点：
+- 非 401
+- `data | length >= 0`（有已发布新闻时应 > 0）
+
+4. Public 权限记录校验（可在 Strapi DB/后台界面核对）
+
+- 必须存在并启用：
+  - `api::news.news-item.find`
+  - `api::news.news-item.findOne`
+
+### 页面验收清单
+
+- [ ] `/members` 页面可切换页码，且每页最多 25 条。
+- [ ] `/members` 页面显示总数与当前分页状态。
+- [ ] 快速点击分页按钮不会触发并发重复请求。
+- [ ] `/news` 页面可正常展示新闻卡片列表。
+- [ ] `/news/:slug` 可正常打开已发布新闻详情。
+- [ ] 未发布新闻在 `publicationState=live` 下不会暴露给匿名访问。

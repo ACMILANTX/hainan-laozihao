@@ -10,7 +10,11 @@ const { getList } = useApi()
 const { data } = await useAsyncData('news-list', async () => {
   const res = await getList<News>('/news', {
     'sort[0]': 'pinned:desc',
-    'sort[1]': 'publishedAt:desc'
+    'sort[1]': 'publishedAt:desc',
+    'publicationState': 'live',
+    'populate': '*',
+    'pagination[page]': 1,
+    'pagination[pageSize]': 12
   })
   return res.data
 })

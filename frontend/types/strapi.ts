@@ -5,7 +5,15 @@ export interface StrapiItem<T> {
 
 export interface StrapiListResponse<T> {
   data: Array<StrapiItem<T>>
-  meta: Record<string, unknown>
+  meta: {
+    pagination?: {
+      page: number
+      pageSize: number
+      pageCount: number
+      total: number
+    }
+    [key: string]: unknown
+  }
 }
 
 export interface StrapiSingleResponse<T> {

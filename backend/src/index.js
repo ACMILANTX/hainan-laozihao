@@ -1,8 +1,8 @@
 const PUBLIC_READ_ACTIONS = [
   'api::member.member.find',
   'api::member.member.findOne',
-  'api::news.news.find',
-  'api::news.news.findOne',
+  'api::news.news-item.find',
+  'api::news.news-item.findOne',
   'api::page.page.find',
   'api::page.page.findOne'
 ]
@@ -51,7 +51,7 @@ async function ensurePublicReadPermissions(strapi) {
     }
   }
 
-  strapi.log.info('[bootstrap] Public 角色已确保开放 members/news/page 的 find 与 findOne。')
+  strapi.log.info(`[bootstrap] Public 角色已确保开放读取权限：${PUBLIC_READ_ACTIONS.join(', ')}`)
 }
 
 module.exports = {
