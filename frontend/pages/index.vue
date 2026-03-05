@@ -97,7 +97,7 @@ const homeVideos = computed(() => {
     </section>
 
     <section>
-      <SectionTitle title="协会视频" desc="首页可展示两个协会宣传视频" />
+      <SectionTitle title="协会视频" desc="" />
       <div class="grid gap-5 md:grid-cols-2">
         <article v-for="video in homeVideos" :key="video.title" class="overflow-hidden rounded-xl border border-red-100 bg-white shadow-sm">
           <iframe :src="video.url" class="h-64 w-full" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen />
