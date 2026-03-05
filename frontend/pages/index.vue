@@ -3,7 +3,12 @@ import type { Member, MemberCategory, News } from '~/types/strapi'
 
 const site = await useSiteSettings()
 const heroImage = useImageSource(site.value.heroImage, '/images/hero-poster.svg')
-const memberCategories: MemberCategory[] = ['中华老字号', '海南老字号', '海南新字号', '品牌培育库']
+const memberCategories: Array<{ label: string, value: MemberCategory }> = [
+  { label: '中华老字号', value: 'china_time_honored' },
+  { label: '海南老字号', value: 'hainan_time_honored' },
+  { label: '海南新字号', value: 'hainan_new_brand' },
+  { label: '品牌培育库', value: 'brand_incubation_pool' }
+]
 
 useSeoMeta({
   title: '首页',
@@ -17,12 +22,12 @@ const { data: memberGroupData } = await useAsyncData('home-members-grouped', asy
     const res = await getList<Member>('/members', {
       'sort[0]': 'wallOrder:asc',
       'sort[1]': 'createdAt:desc',
-      'filters[brandLevel][$eq]': category,
+      'filters[brandLevel][$eq]': category.value,
       'pagination[pageSize]': '3'
     })
 
     return {
-      category,
+      category: category.label,
       items: res.data
     }
   }))
