@@ -16,6 +16,10 @@ const cover = useImageSource(props.item.attributes.coverUrl, '/images/news-cover
         {{ new Date(item.attributes.publishedAt).toLocaleDateString() }}
         <span v-if="item.attributes.pinned" class="ml-2 rounded-full bg-red-700 px-2 py-0.5 text-[10px] text-white">置顶</span>
       </p>
+      <div class="mt-2 flex flex-wrap items-center gap-2">
+        <span v-if="item.attributes.category" class="rounded-full bg-red-50 px-2 py-0.5 text-[11px] font-semibold text-red-700">{{ item.attributes.category }}</span>
+        <span v-if="item.attributes.videoUrl" class="rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-amber-700">含视频</span>
+      </div>
       <h3 class="mt-2 text-lg font-bold text-red-900">{{ item.attributes.title }}</h3>
       <p class="mt-3 text-sm leading-6 text-slate-700">{{ item.attributes.excerpt || item.attributes.summary }}</p>
       <NuxtLink :to="`/news/${item.attributes.slug}`" class="mt-4 inline-block text-sm font-semibold text-red-700 hover:text-red-900">

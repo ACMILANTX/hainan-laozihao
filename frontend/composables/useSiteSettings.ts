@@ -5,7 +5,11 @@ const defaultSettings = {
   heroSubtitle: '以红色国潮视觉传递文化底蕴，打造兼具现代感与组织感的协会门户。',
   themePrimary: '#9f1239',
   themeBg: '#fff1f2',
-  footerText: '© 协会官网 · 红色国潮主题'
+  footerText: '© 协会官网 · 红色国潮主题',
+  homeVideo1Title: '协会视频 1',
+  homeVideo1Url: '',
+  homeVideo2Title: '协会视频 2',
+  homeVideo2Url: ''
 }
 
 export const useSiteSettings = async () => {
@@ -31,7 +35,11 @@ export const useSiteSettings = async () => {
       themeBg: attrs?.themeBg || defaultSettings.themeBg,
       footerText: attrs?.footerText || defaultSettings.footerText,
       heroImage,
-      siteLogo: logoImage
+      siteLogo: logoImage,
+      homeVideo1Title: attrs?.homeVideo1Title || defaultSettings.homeVideo1Title,
+      homeVideo1Url: attrs?.homeVideo1Url || defaultSettings.homeVideo1Url,
+      homeVideo2Title: attrs?.homeVideo2Title || defaultSettings.homeVideo2Title,
+      homeVideo2Url: attrs?.homeVideo2Url || defaultSettings.homeVideo2Url
     }
   })
 
