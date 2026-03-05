@@ -9,7 +9,7 @@ const logoUrl = useImageSource(site.value.siteLogo, '/images/site-logo.svg')
       <NuxtLink to="/" class="flex items-center gap-3">
         <img :src="logoUrl" alt="协会 Logo" class="h-10 w-10 rounded-full border border-yellow-300/50 bg-white/95 object-cover" />
         <div>
-          <p class="text-lg font-extrabold tracking-wide">协会官网</p>
+          <p class="text-lg font-extrabold tracking-wide">海南省老字号企业协会</p>
           <p class="text-xs text-red-100/80">红色国潮 · 凝心聚力</p>
         </div>
       </NuxtLink>

@@ -1,7 +1,7 @@
 services:
   # Strapi 后端服务
   strapi:
-    image:  registry.jcts.xyz/my-strapi-app:latest
+    image:  registry.jcts.xyz/my-strapi-app:${WEBAPI_VERSION}
     container_name: strapi
     restart: unless-stopped
     environment:
@@ -35,7 +35,7 @@ services:
 
   # Nuxt3 前端服务
   nuxt:
-    image: registry.jcts.xyz/my-nuxt3-app:latest
+    image: registry.jcts.xyz/my-nuxt3-app:${WEB_VERSION}
     container_name: nuxt3
     restart: unless-stopped
     environment:
@@ -44,7 +44,7 @@ services:
       HOST: 0.0.0.0
       PORT: 3000
       # 前端访问 Strapi 的 base（你前端如果用运行时 env）
-      NUXT_PUBLIC_API_BASE: https://lzhapi.jcts.xyz
+      NUXT_PUBLIC_API_BASE: https://lzhapi.jcts.xyz/api
     networks:
       - web
     labels:

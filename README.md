@@ -177,6 +177,10 @@ npm run develop
 - 替换 `docker-compose.yml` 中默认密钥与数据库密码。
 - 为 Nginx 配置 HTTPS（如接入 Let's Encrypt）。
 - 根据业务为 Strapi 增加上传对象存储与备份策略。
+- 前端构建：docker build -t registry.jcts.xyz/my-nuxt3-app:1.0.1 ./frontend
+- 后端构建：docker build -t registry.jcts.xyz/my-strapi-app:1.0.1 ./backend
+- 构建完成后在.env修改版本并发布
+- 构建注意要开外网才能下载完整包
 
 
 ## 公共官网上线 checklist

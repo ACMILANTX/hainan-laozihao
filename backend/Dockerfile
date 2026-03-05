@@ -9,12 +9,12 @@ RUN sed -i 's|http://deb.debian.org/debian|http://mirrors.aliyun.com/debian|g' /
  && apt-get update \
  && apt-get install -y --no-install-recommends ca-certificates \
  && update-ca-certificates \
- # 装好 CA 后再切回 https（之后就能正常校验）
  && sed -i 's|http://mirrors.aliyun.com/debian|https://mirrors.aliyun.com/debian|g' /etc/apt/sources.list \
  && sed -i 's|http://mirrors.aliyun.com/debian-security|https://mirrors.aliyun.com/debian-security|g' /etc/apt/sources.list \
  && apt-get update \
  && apt-get install -y --no-install-recommends \
-    python3 make g++ pkg-config libvips-dev \
+    python3 make g++ pkg-config \
+    libvips-dev libglib2.0-dev \
  && rm -rf /var/lib/apt/lists/*
 
 COPY package*.json ./
