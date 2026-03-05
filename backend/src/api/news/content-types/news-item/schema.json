@@ -39,6 +39,26 @@
     "pinned": {
       "type": "boolean",
       "default": false
+    },
+    "category": {
+      "type": "enumeration",
+      "enum": [
+        "活动速递",
+        "政策汇编",
+        "协会通知",
+        "老字号商场"
+      ],
+      "default": "协会通知"
+    },
+    "videoUrl": {
+      "type": "string"
+    },
+    "videoCover": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
     }
   }
 }

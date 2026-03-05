@@ -8,8 +8,8 @@ const { getList } = useApi()
 const { data } = await useAsyncData(`news-${slug}`, async () => {
   const res = await getList<News>('/news', {
     'filters[slug][$eq]': slug,
-    'publicationState': 'live',
-    'populate': '*',
+    publicationState: 'live',
+    populate: '*',
     'pagination[page]': 1,
     'pagination[pageSize]': 1
   })
@@ -22,6 +22,25 @@ if (!data.value) {
 
 const cover = useImageSource(data.value.attributes.coverUrl, '/images/news-cover.svg')
 
+const iframeVideoUrl = computed(() => {
+  const raw = data.value?.attributes.videoUrl
+  if (!raw) {
+    return ''
+  }
+
+  if (raw.includes('bilibili.com/video/')) {
+    const match = raw.match(/video\/(BV[\w]+)/)
+    return match ? `https://player.bilibili.com/player.html?bvid=${match[1]}&page=1` : raw
+  }
+
+  if (raw.includes('youtube.com/watch') || raw.includes('youtu.be/')) {
+    const idMatch = raw.match(/(?:v=|youtu\.be\/)([\w-]+)/)
+    return idMatch?.[1] ? `https://www.youtube.com/embed/${idMatch[1]}` : raw
+  }
+
+  return raw
+})
+
 useSeoMeta({
   title: data.value.attributes.title,
   description: data.value.attributes.excerpt || data.value.attributes.summary || '协会新闻详情'
@@ -31,9 +50,25 @@ useSeoMeta({
 <template>
   <article class="rounded-2xl border border-red-100 bg-white p-6 shadow-lg md:p-10">
     <img :src="cover" alt="新闻封面" class="mb-4 h-64 w-full rounded-xl object-cover" />
-    <p class="text-sm font-medium text-red-700">{{ new Date(data?.attributes.publishedAt || '').toLocaleDateString() }}</p>
+    <div class="flex flex-wrap items-center gap-2 text-sm text-red-700">
+      <span>{{ new Date(data?.attributes.publishedAt || '').toLocaleDateString() }}</span>
+      <span v-if="data?.attributes.category" class="rounded-full bg-red-50 px-2 py-0.5 text-xs font-semibold">{{ data?.attributes.category }}</span>
+    </div>
     <h1 class="mt-2 text-2xl font-extrabold text-red-900 md:text-3xl">{{ data?.attributes.title }}</h1>
     <p class="mt-4 rounded-lg bg-red-50 p-4 text-sm leading-7 text-red-900/90">{{ data?.attributes.excerpt || data?.attributes.summary }}</p>
+
+    <section v-if="iframeVideoUrl" class="mt-6">
+      <h2 class="text-lg font-bold text-red-900">活动视频</h2>
+      <div class="mt-3 overflow-hidden rounded-xl border border-red-100">
+        <iframe
+          :src="iframeVideoUrl"
+          class="h-72 w-full md:h-96"
+          allow="autoplay; encrypted-media; picture-in-picture"
+          allowfullscreen
+        />
+      </div>
+    </section>
+
     <div class="prose prose-slate mt-6 max-w-none whitespace-pre-wrap leading-8 text-slate-700">
       {{ data?.attributes.content }}
     </div>

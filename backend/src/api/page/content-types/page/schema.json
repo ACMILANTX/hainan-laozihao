@@ -58,6 +58,18 @@
     },
     "footerText": {
       "type": "text"
+    },
+    "homeVideo1Title": {
+      "type": "string"
+    },
+    "homeVideo1Url": {
+      "type": "string"
+    },
+    "homeVideo2Title": {
+      "type": "string"
+    },
+    "homeVideo2Url": {
+      "type": "string"
     }
   }
 }
