@@ -21,9 +21,9 @@ const site = await useSiteSettings()
       <section>
         <h4 class="font-semibold text-yellow-100">联系信息</h4>
         <ul class="mt-3 space-y-2 text-sm text-red-100/90">
-          <li>邮箱：info@lzh.com</li>
-          <li>电话：0898-12345678</li>
-          <li>地址：海南省海口市 88 号</li>
+          <li>邮箱：765258653@qq.com</li>
+          <li>电话：13198979988</li>
+          <li>地址：海南品牌出海孵化基地:海南省海口市龙华区新华北路2号中国工商银行解放路支行三楼</li>
         </ul>
       </section>
     </div>
