@@ -29,7 +29,7 @@ const logoUrl = useImageSource(site.value.siteLogo, '/images/site-logo.svg')
 .nav-link {
   @apply rounded-md px-2 py-1 text-red-50/95 transition hover:bg-red-700/50 hover:text-yellow-200 md:px-3;
 }
-.router-link-active {
+a.nav-link.router-link-active {
   @apply bg-red-700/60 text-yellow-200;
 }
 </style>
