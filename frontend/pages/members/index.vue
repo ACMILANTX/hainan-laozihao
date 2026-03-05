@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import type { Member, StrapiItem } from '~/types/strapi'
+import type { Member, MemberCategory, StrapiItem } from '~/types/strapi'
 
 const search = ref('')
-const currentTag = ref('全部')
+const currentCategory = ref<MemberCategory>('中华老字号')
+const categories: MemberCategory[] = ['中华老字号', '海南老字号', '海南新字号', '品牌培育库']
 const page = ref(1)
-const pageSize = 25
+const pageSize = 24
 const members = ref<Array<StrapiItem<Member>>>([])
 const total = ref(0)
 const pageCount = ref(1)
@@ -12,12 +13,12 @@ const isLoading = ref(false)
 
 useSeoMeta({
   title: '会员墙',
-  description: '协会会员墙，展示会员单位与个人风采。'
+  description: '协会会员墙，按中华老字号、海南老字号、海南新字号、品牌培育库四大板块展示。'
 })
 
 const { getList } = useApi()
 
-const loadMembers = async (targetPage: number) => {
+const loadMembers = async (targetPage = 1) => {
   if (isLoading.value || targetPage < 1) {
     return
   }
@@ -28,7 +29,8 @@ const loadMembers = async (targetPage: number) => {
     const res = await getList<Member>('/members', {
       'sort[0]': 'wallOrder:asc',
       'sort[1]': 'createdAt:desc',
-      'publicationState': 'live',
+      'filters[brandLevel][$eq]': currentCategory.value,
+      publicationState: 'live',
       'pagination[page]': targetPage,
       'pagination[pageSize]': pageSize
     })
@@ -42,29 +44,25 @@ const loadMembers = async (targetPage: number) => {
   }
 }
 
-await useAsyncData('members', async () => {
-  await loadMembers(page.value)
+await useAsyncData('members-by-category', async () => {
+  await loadMembers(1)
   return true
 })
 
-watch([search, currentTag], () => {
-  if (page.value !== 1) {
-    loadMembers(1)
-  }
-})
-
-const tags = computed(() => {
-  const values = new Set((members.value || []).map((item) => item.attributes.tag).filter(Boolean))
-  return ['全部', ...Array.from(values) as string[]]
+watch(currentCategory, async () => {
+  await loadMembers(1)
 })
 
 const filteredMembers = computed(() => {
+  const keyword = search.value.trim().toLowerCase()
   return (members.value || []).filter((item) => {
+    if (!keyword) {
+      return true
+    }
+
     const attrs = item.attributes
-    const keyword = search.value.trim().toLowerCase()
-    const hitSearch = !keyword || [attrs.name, attrs.title, attrs.city, attrs.bio].some((field) => String(field || '').toLowerCase().includes(keyword))
-    const hitTag = currentTag.value === '全部' || attrs.tag === currentTag.value
-    return hitSearch && hitTag
+    return [attrs.name, attrs.title, attrs.city, attrs.bio, attrs.brandStory, attrs.province]
+      .some((field) => String(field || '').toLowerCase().includes(keyword))
   })
 })
 
@@ -83,27 +81,27 @@ const visiblePageNumbers = computed(() => {
 
 <template>
   <section class="space-y-5">
-    <SectionTitle title="会员墙" desc="携手会员共进，共创发展新格局" />
+    <SectionTitle title="会员墙" desc="四大板块：中华老字号、海南老字号、海南新字号、品牌培育库" />
 
     <div class="rounded-xl border border-red-100 bg-white p-4 shadow-sm">
       <div class="grid gap-3 md:grid-cols-[2fr,3fr]">
         <input v-model="search" type="text" placeholder="搜索会员名称 / 城市 / 简介" class="rounded-lg border border-red-200 px-3 py-2 text-sm outline-none focus:border-red-500" />
         <div class="flex flex-wrap gap-2">
           <button
-            v-for="tag in tags"
-            :key="tag"
+            v-for="category in categories"
+            :key="category"
             type="button"
             class="rounded-full border px-3 py-1 text-xs font-semibold transition"
-            :class="currentTag === tag ? 'border-red-700 bg-red-700 text-white' : 'border-red-200 text-red-700 hover:border-red-400'"
-            @click="currentTag = tag"
+            :class="currentCategory === category ? 'border-red-700 bg-red-700 text-white' : 'border-red-200 text-red-700 hover:border-red-400'"
+            @click="currentCategory = category"
           >
-            {{ tag }}
+            {{ category }}
           </button>
         </div>
       </div>
     </div>
 
-    <p class="text-sm text-slate-600">共 {{ total }} 位会员（每页 {{ pageSize }} 条）</p>
+    <p class="text-sm text-slate-600">{{ currentCategory }}：共 {{ total }} 位会员（每页 {{ pageSize }} 条）</p>
 
     <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       <MemberCard v-for="member in filteredMembers" :key="member.id" :member="member" />

@@ -46,6 +46,35 @@
     "wallOrder": {
       "type": "integer",
       "default": 0
+    },
+    "province": {
+      "type": "string"
+    },
+    "brandLevel": {
+      "type": "enumeration",
+      "enum": [
+        "中华老字号",
+        "海南老字号",
+        "海南新字号",
+        "品牌培育库"
+      ],
+      "default": "海南新字号"
+    },
+    "productIntro": {
+      "type": "richtext"
+    },
+    "productImages": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "officialWebsite": {
+      "type": "string"
+    },
+    "officialWebsiteLabel": {
+      "type": "string"
     }
   }
 }
