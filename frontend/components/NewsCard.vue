@@ -1,11 +1,18 @@
 <script setup lang="ts">
-import type { News, StrapiItem } from '~/types/strapi'
+import type { News, NewsCategory, StrapiItem } from '~/types/strapi'
 
 const props = defineProps<{
   item: StrapiItem<News>
 }>()
 
 const cover = useImageSource(props.item.attributes.coverUrl, '/images/news-cover.svg')
+
+const categoryLabelMap: Record<NewsCategory, string> = {
+  event_updates: '活动速递',
+  policy_digest: '政策汇编',
+  association_notice: '协会通知',
+  time_honored_mall: '老字号商场'
+}
 </script>
 
 <template>
@@ -17,7 +24,7 @@ const cover = useImageSource(props.item.attributes.coverUrl, '/images/news-cover
         <span v-if="item.attributes.pinned" class="ml-2 rounded-full bg-red-700 px-2 py-0.5 text-[10px] text-white">置顶</span>
       </p>
       <div class="mt-2 flex flex-wrap items-center gap-2">
-        <span v-if="item.attributes.category" class="rounded-full bg-red-50 px-2 py-0.5 text-[11px] font-semibold text-red-700">{{ item.attributes.category }}</span>
+        <span v-if="item.attributes.category" class="rounded-full bg-red-50 px-2 py-0.5 text-[11px] font-semibold text-red-700">{{ categoryLabelMap[item.attributes.category] || item.attributes.category }}</span>
         <span v-if="item.attributes.videoUrl" class="rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-amber-700">含视频</span>
       </div>
       <h3 class="mt-2 text-lg font-bold text-red-900">{{ item.attributes.title }}</h3>

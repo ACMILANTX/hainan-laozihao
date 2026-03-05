@@ -37,8 +37,8 @@ export interface StrapiMediaList {
   data?: StrapiMediaFile[]
 }
 
-export type MemberCategory = '中华老字号' | '海南老字号' | '海南新字号' | '品牌培育库'
-export type NewsCategory = '活动速递' | '政策汇编' | '协会通知' | '老字号商场'
+export type MemberCategory = 'china_time_honored' | 'hainan_time_honored' | 'hainan_new_brand' | 'brand_incubation_pool'
+export type NewsCategory = 'event_updates' | 'policy_digest' | 'association_notice' | 'time_honored_mall'
 
 export interface Member {
   name: string

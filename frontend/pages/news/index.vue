@@ -1,8 +1,13 @@
 <script setup lang="ts">
 import type { News, NewsCategory } from '~/types/strapi'
 
-const categories: NewsCategory[] = ['活动速递', '政策汇编', '协会通知', '老字号商场']
-const currentCategory = ref<NewsCategory>('活动速递')
+const categories: Array<{ label: string, value: NewsCategory }> = [
+  { label: '活动速递', value: 'event_updates' },
+  { label: '政策汇编', value: 'policy_digest' },
+  { label: '协会通知', value: 'association_notice' },
+  { label: '老字号商场', value: 'time_honored_mall' }
+]
+const currentCategory = ref<NewsCategory>('event_updates')
 
 useSeoMeta({
   title: '协会新闻',
@@ -34,13 +39,13 @@ const { data, pending } = await useAsyncData('news-list', async () => {
     <div class="mb-5 flex flex-wrap gap-2 rounded-xl border border-red-100 bg-white p-3 shadow-sm">
       <button
         v-for="category in categories"
-        :key="category"
+        :key="category.value"
         type="button"
         class="rounded-full border px-3 py-1 text-xs font-semibold transition"
-        :class="currentCategory === category ? 'border-red-700 bg-red-700 text-white' : 'border-red-200 text-red-700 hover:border-red-400'"
-        @click="currentCategory = category"
+        :class="currentCategory === category.value ? 'border-red-700 bg-red-700 text-white' : 'border-red-200 text-red-700 hover:border-red-400'"
+        @click="currentCategory = category.value"
       >
-        {{ category }}
+        {{ category.label }}
       </button>
     </div>
 
