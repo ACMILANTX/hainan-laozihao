@@ -23,31 +23,35 @@ async function ensurePublicReadPermissions(strapi) {
   }
 
   for (const action of PUBLIC_READ_ACTIONS) {
-    const existingPermission = await strapi
-      .query('plugin::users-permissions.permission')
-      .findOne({
-        where: {
-          action,
-          role: publicRole.id
-        }
-      })
+    try {
+      const existingPermission = await strapi
+        .query('plugin::users-permissions.permission')
+        .findOne({
+          where: {
+            action,
+            role: publicRole.id
+          }
+        })
 
-    if (!existingPermission) {
-      await strapi.query('plugin::users-permissions.permission').create({
-        data: {
-          action,
-          role: publicRole.id,
-          enabled: true
-        }
-      })
-      continue
-    }
+      if (!existingPermission) {
+        await strapi.query('plugin::users-permissions.permission').create({
+          data: {
+            action,
+            role: publicRole.id,
+            enabled: true
+          }
+        })
+        continue
+      }
 
-    if (!existingPermission.enabled) {
-      await strapi.query('plugin::users-permissions.permission').update({
-        where: { id: existingPermission.id },
-        data: { enabled: true }
-      })
+      if (!existingPermission.enabled) {
+        await strapi.query('plugin::users-permissions.permission').update({
+          where: { id: existingPermission.id },
+          data: { enabled: true }
+        })
+      }
+    } catch (error) {
+      strapi.log.warn(`[bootstrap] Public 角色权限动作初始化失败：${action}，原因：${error.message}`)
     }
   }
 
