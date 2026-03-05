@@ -1,9 +1,16 @@
 <script setup lang="ts">
-import type { News } from '~/types/strapi'
+import type { News, NewsCategory } from '~/types/strapi'
 
 const route = useRoute()
 const slug = String(route.params.slug)
 const { getList } = useApi()
+
+const categoryLabelMap: Record<NewsCategory, string> = {
+  event_updates: '活动速递',
+  policy_digest: '政策汇编',
+  association_notice: '协会通知',
+  time_honored_mall: '老字号商场'
+}
 
 const { data } = await useAsyncData(`news-${slug}`, async () => {
   const res = await getList<News>('/news', {
@@ -52,7 +59,7 @@ useSeoMeta({
     <img :src="cover" alt="新闻封面" class="mb-4 h-64 w-full rounded-xl object-cover" />
     <div class="flex flex-wrap items-center gap-2 text-sm text-red-700">
       <span>{{ new Date(data?.attributes.publishedAt || '').toLocaleDateString() }}</span>
-      <span v-if="data?.attributes.category" class="rounded-full bg-red-50 px-2 py-0.5 text-xs font-semibold">{{ data?.attributes.category }}</span>
+      <span v-if="data?.attributes.category" class="rounded-full bg-red-50 px-2 py-0.5 text-xs font-semibold">{{ categoryLabelMap[data?.attributes.category] || data?.attributes.category }}</span>
     </div>
     <h1 class="mt-2 text-2xl font-extrabold text-red-900 md:text-3xl">{{ data?.attributes.title }}</h1>
     <p class="mt-4 rounded-lg bg-red-50 p-4 text-sm leading-7 text-red-900/90">{{ data?.attributes.excerpt || data?.attributes.summary }}</p>
