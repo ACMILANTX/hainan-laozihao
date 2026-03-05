@@ -43,12 +43,12 @@
     "category": {
       "type": "enumeration",
       "enum": [
-        "活动速递",
-        "政策汇编",
-        "协会通知",
-        "老字号商场"
+        "event_updates",
+        "policy_digest",
+        "association_notice",
+        "time_honored_mall"
       ],
-      "default": "协会通知"
+      "default": "association_notice"
     },
     "videoUrl": {
       "type": "string"

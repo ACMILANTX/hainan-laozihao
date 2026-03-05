@@ -2,8 +2,13 @@
 import type { Member, MemberCategory, StrapiItem } from '~/types/strapi'
 
 const search = ref('')
-const currentCategory = ref<MemberCategory>('中华老字号')
-const categories: MemberCategory[] = ['中华老字号', '海南老字号', '海南新字号', '品牌培育库']
+const currentCategory = ref<MemberCategory>('china_time_honored')
+const categories: Array<{ label: string, value: MemberCategory }> = [
+  { label: '中华老字号', value: 'china_time_honored' },
+  { label: '海南老字号', value: 'hainan_time_honored' },
+  { label: '海南新字号', value: 'hainan_new_brand' },
+  { label: '品牌培育库', value: 'brand_incubation_pool' }
+]
 const page = ref(1)
 const pageSize = 24
 const members = ref<Array<StrapiItem<Member>>>([])
@@ -89,19 +94,19 @@ const visiblePageNumbers = computed(() => {
         <div class="flex flex-wrap gap-2">
           <button
             v-for="category in categories"
-            :key="category"
+            :key="category.value"
             type="button"
             class="rounded-full border px-3 py-1 text-xs font-semibold transition"
-            :class="currentCategory === category ? 'border-red-700 bg-red-700 text-white' : 'border-red-200 text-red-700 hover:border-red-400'"
-            @click="currentCategory = category"
+            :class="currentCategory === category.value ? 'border-red-700 bg-red-700 text-white' : 'border-red-200 text-red-700 hover:border-red-400'"
+            @click="currentCategory = category.value"
           >
-            {{ category }}
+            {{ category.label }}
           </button>
         </div>
       </div>
     </div>
 
-    <p class="text-sm text-slate-600">{{ currentCategory }}：共 {{ total }} 位会员（每页 {{ pageSize }} 条）</p>
+    <p class="text-sm text-slate-600">{{ categories.find((item) => item.value === currentCategory)?.label }}：共 {{ total }} 位会员（每页 {{ pageSize }} 条）</p>
 
     <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       <MemberCard v-for="member in filteredMembers" :key="member.id" :member="member" />
