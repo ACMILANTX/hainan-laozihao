@@ -3,6 +3,8 @@ const PUBLIC_READ_ACTIONS = [
   'api::member.member.findOne',
   'api::news.news-item.find',
   'api::news.news-item.findOne',
+  'api::news.news.find',
+  'api::news.news.findOne',
   'api::page.page.find',
   'api::page.page.findOne'
 ]
