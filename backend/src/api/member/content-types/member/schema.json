@@ -53,12 +53,12 @@
     "brandLevel": {
       "type": "enumeration",
       "enum": [
-        "中华老字号",
-        "海南老字号",
-        "海南新字号",
-        "品牌培育库"
+        "china_time_honored",
+        "hainan_time_honored",
+        "hainan_new_brand",
+        "brand_incubation_pool"
       ],
-      "default": "海南新字号"
+      "default": "hainan_new_brand"
     },
     "productIntro": {
       "type": "richtext"
