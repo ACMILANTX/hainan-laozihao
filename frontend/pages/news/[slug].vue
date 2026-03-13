@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import MarkdownIt from 'markdown-it'
+import sanitizeHtml from 'sanitize-html'
 import type { News, NewsCategory } from '~/types/strapi'
 
 const route = useRoute()
@@ -28,6 +30,30 @@ if (!data.value) {
 }
 
 const cover = useImageSource(data.value.attributes.coverUrl, '/images/news-cover.svg')
+
+const markdown = new MarkdownIt({
+  html: false,
+  breaks: true,
+  linkify: true
+})
+
+const renderedContent = computed(() => {
+  const source = data.value?.attributes.content || ''
+  const html = markdown.render(source)
+
+  return sanitizeHtml(html, {
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'h1', 'h2', 'h3']),
+    allowedAttributes: {
+      ...sanitizeHtml.defaults.allowedAttributes,
+      img: ['src', 'alt', 'title'],
+      a: ['href', 'name', 'target', 'rel']
+    },
+    allowedSchemes: ['http', 'https', 'data'],
+    transformTags: {
+      a: sanitizeHtml.simpleTransform('a', { rel: 'noopener noreferrer', target: '_blank' })
+    }
+  })
+})
 
 const iframeVideoUrl = computed(() => {
   const raw = data.value?.attributes.videoUrl
@@ -76,9 +102,7 @@ useSeoMeta({
       </div>
     </section>
 
-    <div class="prose prose-slate mt-6 max-w-none whitespace-pre-wrap leading-8 text-slate-700">
-      {{ data?.attributes.content }}
-    </div>
+    <div class="prose prose-slate mt-6 max-w-none leading-8 text-slate-700" v-html="renderedContent" />
 
     <NuxtLink to="/news" class="mt-8 inline-block rounded-full border border-red-700 px-4 py-2 text-sm font-semibold text-red-700 hover:bg-red-700 hover:text-white">
       返回新闻列表
